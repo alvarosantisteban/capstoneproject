@@ -27,6 +27,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.alvarosantisteban.berlinmarketfinder.MarketListActivity" />
         </activity>
+
+        <provider
+            android:authorities="com.alvarosantisteban.berlinmarketfinder"
+            android:name=".data.MarketsContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>
