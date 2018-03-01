@@ -4,18 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-import com.alvarosantisteban.berlinmarketfinder.dummy.DummyContent;
+import com.alvarosantisteban.berlinmarketfinder.model.DummyContent;
+import com.alvarosantisteban.berlinmarketfinder.model.Market;
 
 import java.util.List;
 
@@ -74,15 +74,15 @@ public class MarketListActivity extends AppCompatActivity {
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final MarketListActivity mParentActivity;
-        private final List<DummyContent.DummyItem> mValues;
+        private final List<Market> mValues;
         private final boolean mTwoPane;
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
+                Market item = (Market) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(MarketDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(MarketDetailFragment.ARG_ITEM_ID, item.getId());
                     MarketDetailFragment fragment = new MarketDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -91,7 +91,7 @@ public class MarketListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, MarketDetailActivity.class);
-                    intent.putExtra(MarketDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(MarketDetailFragment.ARG_ITEM_ID, item.getId());
 
                     context.startActivity(intent);
                 }
@@ -99,7 +99,7 @@ public class MarketListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(MarketListActivity parent,
-                                      List<DummyContent.DummyItem> items,
+                                      List<Market> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
@@ -115,8 +115,8 @@ public class MarketListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).id);
-            holder.mContentView.setText(mValues.get(position).content);
+            holder.mIdView.setText(mValues.get(position).getId());
+            holder.mContentView.setText(mValues.get(position).getName());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
