@@ -4,9 +4,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.alvarosantisteban.berlinmarketfinder.api.BerlinMarketsAPI;
-import com.alvarosantisteban.berlinmarketfinder.model.Market;
 import com.alvarosantisteban.berlinmarketfinder.model.MarketContainer;
 import com.google.gson.GsonBuilder;
+
+import org.greenrobot.eventbus.EventBus;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,16 +40,13 @@ class MarketsController implements Callback<MarketContainer> {
     public void onResponse(@NonNull Call<MarketContainer> call, @NonNull Response<MarketContainer> response) {
         if (response.isSuccessful()) {
             MarketContainer markets = response.body();
-            // FIXME Remove this code
             if (markets != null && markets.getMarkets() != null) {
-                for(Market market : markets.getMarkets()) {
-                    if(market != null) {
-                        Log.d(TAG, market.getName());
-                    }
-                }
+                EventBus.getDefault().post(markets.getMarkets());
             } else {
-                Log.e(TAG, response.errorBody().toString());
+                Log.e(TAG, "Markets are null");
             }
+        } else {
+            Log.e(TAG, response.errorBody().toString());
         }
     }
 

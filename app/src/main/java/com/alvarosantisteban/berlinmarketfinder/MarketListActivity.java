@@ -3,7 +3,6 @@ package com.alvarosantisteban.berlinmarketfinder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.alvarosantisteban.berlinmarketfinder.model.DummyContent;
 import com.alvarosantisteban.berlinmarketfinder.model.Market;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -34,6 +35,8 @@ public class MarketListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+
+    private RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +64,28 @@ public class MarketListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.market_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        rv = findViewById(R.id.market_list);
 
         MarketsController marketsController = new MarketsController();
         marketsController.start();
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    // Reached from the bus
+    @Subscribe
+    public void onMarketsDownloaded(List<Market> markets) {
+        rv.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
