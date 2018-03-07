@@ -64,6 +64,9 @@ public class MarketListActivity extends AppCompatActivity {
         View recyclerView = findViewById(R.id.market_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView);
+
+        MarketsController marketsController = new MarketsController();
+        marketsController.start();
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
