@@ -43,7 +43,7 @@ public class Market {
     @Expose
     private String otherInfo;
 
-    Market(String id,
+    public Market(String id,
                   String neighborhood,
                   String name,
                   String latitude,

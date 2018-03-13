@@ -32,7 +32,8 @@ class MarketsController implements Callback<MarketContainer> {
 
         BerlinMarketsAPI berlinMarketsAPI = retrofit.create(BerlinMarketsAPI.class);
 
-        Call<MarketContainer> call = berlinMarketsAPI.getMarkets(""); // FIXME Allow filtering by neighborhood
+//        Call<MarketContainer> call = berlinMarketsAPI.getMarkets("");
+        Call<MarketContainer> call = berlinMarketsAPI.getMarkets("Neukolln"); // FIXME Allow filtering by neighborhood
         call.enqueue(this);
     }
 
