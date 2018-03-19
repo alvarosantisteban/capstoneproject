@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Berlin Market Finder</string>
+
     <string name="title_market_list">Markets</string>
     <string name="title_market_detail">Market Detail</string>
+
+    <string name="menu_action_reload">Reload</string>
 </resources>

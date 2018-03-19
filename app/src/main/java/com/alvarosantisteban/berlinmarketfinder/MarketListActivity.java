@@ -13,6 +13,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -105,6 +107,29 @@ public class MarketListActivity extends AppCompatActivity {
         // Delete all the markets with the ID of the new ones, and insert all the new markets
         new OperateWithDBAsyncTask(this, markets).execute(DB_OPERATIONS.REMOVE_AND_ADD);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.markets_list_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_reload:
+                // Ask API for markets
+                MarketsController marketsController = new MarketsController();
+                marketsController.start();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // ASYNC TASK FOR CONTENT PROVIDER
+    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Helper class to do operations with the content provider in an asynchronous thread.
@@ -235,6 +260,10 @@ public class MarketListActivity extends AppCompatActivity {
             return activity.getContentResolver().query(MarketsContract.Market.CONTENT_URI, null, null, null, null, null);
         }
     }
+
+    ////////////////////////////////////////////////////////////////////////////////
+    // ADAPTER FOR RECYCLER VIEW
+    ////////////////////////////////////////////////////////////////////////////////
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
