@@ -1,6 +1,7 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.alvarosantisteban.berlinmarketfinder.api.BerlinMarketsAPI;
@@ -15,6 +16,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.alvarosantisteban.berlinmarketfinder.MarketListActivity.FILTER_ALL_NEIGHBORHOODS;
+
 /**
  * Creates the Retrofit client, calls the TheMovieDB API for the specific endpoint and posts the
  * result in the Otto bus.
@@ -23,7 +26,7 @@ class MarketsController implements Callback<MarketContainer> {
 
     private static final String TAG = MarketsController.class.getSimpleName();
 
-    void start() {
+    void start(@Nullable String selectedNeighborhood) {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BerlinMarketsAPI.BERLIN_MARKETS_BASE_URL)
@@ -31,9 +34,7 @@ class MarketsController implements Callback<MarketContainer> {
                 .build();
 
         BerlinMarketsAPI berlinMarketsAPI = retrofit.create(BerlinMarketsAPI.class);
-
-//        Call<MarketContainer> call = berlinMarketsAPI.getMarkets("");
-        Call<MarketContainer> call = berlinMarketsAPI.getMarkets("Neukolln"); // FIXME Allow filtering by neighborhood
+        Call<MarketContainer> call = berlinMarketsAPI.getMarkets(selectedNeighborhood != null ? selectedNeighborhood : FILTER_ALL_NEIGHBORHOODS);
         call.enqueue(this);
     }
 

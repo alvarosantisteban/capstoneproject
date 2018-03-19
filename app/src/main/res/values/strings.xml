@@ -5,4 +5,21 @@
     <string name="title_market_detail">Market Detail</string>
 
     <string name="menu_action_reload">Reload</string>
+    <string name="menu_action_filter">Filter</string>
+
+    <string-array name="sort_order">
+        <item>All</item>
+        <item>Charlottenburg-Wilmersdorf</item>
+        <item>Friedrichshain-Kreuzberg</item>
+        <item>Lichtenberg</item>
+        <item>Marzahn-Hellersdorf</item>
+        <item>Mitte</item>
+        <item>Neukölln</item>
+        <item>Pankow</item>
+        <item>Reinickendorf</item>
+        <item>Steglitz-Zehlendorf</item>
+        <item>Tempelhof-Schöneberg</item>
+        <item>Treptow-Köpenick</item>
+        <item>Brandenburg</item>
+    </string-array>
 </resources>

@@ -1,13 +1,16 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +18,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.alvarosantisteban.berlinmarketfinder.data.MarketsContract;
@@ -31,7 +38,7 @@ import java.util.List;
 
 /**
  * An activity representing a list of Markets which are either downloaded or queried from the content
- * provider using an asynchronous task.
+ * provider using an asynchronous task. The list of markets can be filtered by neighborhood.
  *
  * This activity has different presentations for handset and tablet-size devices. On
  * handsets, the activity presents a list of items, which when touched,
@@ -39,7 +46,11 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MarketListActivity extends AppCompatActivity {
+public class MarketListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+
+    public static final int POS_ALL = 0;
+    public static final String FILTER_ALL_NEIGHBORHOODS = "";
+    private static final String SPINNER_POS = "spinnerPos";
 
     private enum DB_OPERATIONS {
         QUERY,
@@ -52,6 +63,10 @@ public class MarketListActivity extends AppCompatActivity {
      */
     private boolean mTwoPane;
     private RecyclerView recyclerView;
+    
+    // Used to distinguish between real user touches and automatic calls on onItemSelected
+    private boolean hasUserTouchedSpinner = false;
+    private Spinner spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,7 +126,27 @@ public class MarketListActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.markets_list_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+
+        MenuItem item = menu.findItem(R.id.spinner);
+        spinner = (Spinner) item.getActionView();
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.sort_order, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        int spinnerPos = PreferenceManager.getDefaultSharedPreferences(this).getInt(SPINNER_POS, POS_ALL);
+        spinner.setAdapter(adapter);
+        spinner.setSelection(spinnerPos);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hasUserTouchedSpinner = true;
+                return false;
+            }
+        });
+
+        return true;
     }
 
     @Override
@@ -120,11 +155,60 @@ public class MarketListActivity extends AppCompatActivity {
             case R.id.action_reload:
                 // Ask API for markets
                 MarketsController marketsController = new MarketsController();
-                marketsController.start();
+                marketsController.start(getCurrentFilter());
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if(!hasUserTouchedSpinner) {
+            return;
+        }
+        hasUserTouchedSpinner = false;
+
+        // Save the spinner position
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putInt(SPINNER_POS, position);
+        editor.apply();
+
+        new OperateWithDBAsyncTask(this).execute(DB_OPERATIONS.QUERY);
+    }
+
+    @NonNull
+    private String getCurrentFilter() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int currentPos = sharedPreferences.getInt(SPINNER_POS, POS_ALL);
+
+        return filterBySpinnerPos(currentPos);
+    }
+
+    @NonNull
+    private String filterBySpinnerPos(int position) {
+        // We are avoiding on purpose returning the string for position=0 because the string that
+        // it returns is "All", which is not what we want to send in the API request
+        if(position > 0 && position < getResources().getStringArray(R.array.sort_order).length) {
+            return getResources().getStringArray(R.array.sort_order)[position];
+        } else {
+            return FILTER_ALL_NEIGHBORHOODS;
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Do nothing
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // Save the spinner position
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+        editor.putInt(SPINNER_POS, spinner.getSelectedItemPosition());
+        editor.apply();
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -168,7 +252,7 @@ public class MarketListActivity extends AppCompatActivity {
                     }
                     return null;
                 case QUERY:
-                    return queryMarkets(activity);
+                    return queryMarkets(activity, activity.getCurrentFilter());
 
             }
             return null;
@@ -191,7 +275,7 @@ public class MarketListActivity extends AppCompatActivity {
                     } else {
                         // No entries, ask to API
                         MarketsController marketsController = new MarketsController();
-                        marketsController.start();
+                        marketsController.start(activity.getCurrentFilter());
                     }
                 case REMOVE_AND_ADD:
 
@@ -256,8 +340,15 @@ public class MarketListActivity extends AppCompatActivity {
             }
         }
 
-        private Cursor queryMarkets(@NonNull MarketListActivity activity) {
-            return activity.getContentResolver().query(MarketsContract.Market.CONTENT_URI, null, null, null, null, null);
+        private Cursor queryMarkets(@NonNull MarketListActivity activity, @Nullable String neighborhood) {
+            String selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + "=?";
+            String[] selectionArgs = {neighborhood};
+            return activity.getContentResolver().query(MarketsContract.Market.CONTENT_URI,
+                    null,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null);
         }
     }
 
