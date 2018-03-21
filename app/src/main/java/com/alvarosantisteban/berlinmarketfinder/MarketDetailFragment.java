@@ -40,7 +40,7 @@ public class MarketDetailFragment extends Fragment {
 
             Activity activity = this.getActivity();
             assert activity != null;
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.collapsing_toolbar);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(market.getName());
             }
@@ -53,7 +53,10 @@ public class MarketDetailFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.market_detail, container, false);
 
         if (market != null) {
-            ((TextView) rootView.findViewById(R.id.market_detail)).setText(market.getOtherInfo());
+            ((TextView) rootView.findViewById(R.id.market_name)).setText(market.getName());
+            ((TextView) rootView.findViewById(R.id.market_opening)).setText(market.getOpeningHours() +market.getOpeningDays());
+            ((TextView) rootView.findViewById(R.id.market_other_info)).setText(market.getOtherInfo());
+            ((TextView) rootView.findViewById(R.id.market_contact_info)).setText(market.getOrganizerWebsite());
         }
 
         return rootView;

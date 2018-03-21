@@ -1,9 +1,33 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/market_detail"
-    style="?android:attr/textAppearanceLarge"
+    android:id="@+id/market_detail_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:textIsSelectable="true"
-    tools:context="com.alvarosantisteban.berlinmarketfinder.MarketDetailFragment" />
+    android:orientation="vertical"
+    tools:context="com.alvarosantisteban.berlinmarketfinder.MarketDetailFragment" >
+    <TextView
+        android:id="@+id/market_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textIsSelectable="true"/>
+    <TextView
+        android:id="@+id/market_opening"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textIsSelectable="true" />
+    <TextView
+        android:id="@+id/market_other_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textIsSelectable="true" />
+    <TextView
+        android:id="@+id/market_contact_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textIsSelectable="true" />
+</LinearLayout>
