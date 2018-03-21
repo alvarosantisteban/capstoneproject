@@ -41,8 +41,8 @@ public class MarketDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(MarketDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(MarketDetailFragment.ARG_ITEM_ID));
+            arguments.putParcelable(MarketDetailFragment.ARG_ITEM,
+                    getIntent().getParcelableExtra(MarketDetailFragment.ARG_ITEM));
             MarketDetailFragment fragment = new MarketDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

@@ -1,5 +1,8 @@
 package com.alvarosantisteban.berlinmarketfinder.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * A second hand market is defined by its location, the days and hours that opens and the person/company
  * that organizes/manages it.
  */
-public class Market {
+public class Market implements Parcelable{
 
     @SerializedName("id")
     @Expose
@@ -67,6 +70,20 @@ public class Market {
         this.otherInfo = otherInfo;
     }
 
+    protected Market(Parcel in) {
+        id = in.readString();
+        neighborhood = in.readString();
+        name = in.readString();
+        latitude = in.readString();
+        longitude = in.readString();
+        openingDays = in.readString();
+        openingHours = in.readString();
+        organizerNameAndPhone = in.readString();
+        organizerEmail = in.readString();
+        organizerWebsite = in.readString();
+        otherInfo = in.readString();
+    }
+
     public String getId() {
         return id;
     }
@@ -109,5 +126,37 @@ public class Market {
 
     public String getOtherInfo() {
         return otherInfo;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Market> CREATOR = new Creator<Market>() {
+        @Override
+        public Market createFromParcel(Parcel in) {
+            return new Market(in);
+        }
+
+        @Override
+        public Market[] newArray(int size) {
+            return new Market[size];
+        }
+    };
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(neighborhood);
+        dest.writeString(name);
+        dest.writeString(latitude);
+        dest.writeString(longitude);
+        dest.writeString(openingDays);
+        dest.writeString(openingHours);
+        dest.writeString(organizerNameAndPhone);
+        dest.writeString(organizerEmail);
+        dest.writeString(organizerWebsite);
+        dest.writeString(otherInfo);
     }
 }

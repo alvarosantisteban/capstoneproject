@@ -1,6 +1,8 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.AsyncTask;
@@ -10,7 +12,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
@@ -365,22 +366,21 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Market item = (Market) view.getTag();
-                // TODO Make changes to pass the Market, not just the ID
+                Market market = (Market) view.getTag();
                 if (mTwoPane) {
-//                    Bundle arguments = new Bundle();
-//                    arguments.putString(MarketDetailFragment.ARG_ITEM_ID, item.getId());
-//                    MarketDetailFragment fragment = new MarketDetailFragment();
-//                    fragment.setArguments(arguments);
-//                    mParentActivity.getSupportFragmentManager().beginTransaction()
-//                            .replace(R.id.market_detail_container, fragment)
-//                            .commit();
+                    Bundle arguments = new Bundle();
+                    arguments.putParcelable(MarketDetailFragment.ARG_ITEM, market);
+                    MarketDetailFragment fragment = new MarketDetailFragment();
+                    fragment.setArguments(arguments);
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.market_detail_container, fragment)
+                            .commit();
                 } else {
-//                    Context context = view.getContext();
-//                    Intent intent = new Intent(context, MarketDetailActivity.class);
-//                    intent.putExtra(MarketDetailFragment.ARG_ITEM_ID, item.getId());
-//
-//                    context.startActivity(intent);
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, MarketDetailActivity.class);
+                    intent.putExtra(MarketDetailFragment.ARG_ITEM, market);
+
+                    context.startActivity(intent);
                 }
             }
         };
