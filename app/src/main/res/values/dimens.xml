@@ -5,7 +5,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_height_width">56dp</dimen>
 
-    <dimen name="app_bar_height">200dp</dimen>
     <dimen name="extended_app_bar_height">168dp</dimen>
     <dimen name="app_bar_elevation">4dp</dimen>
 
@@ -17,7 +16,6 @@
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
     <dimen name="detail_mapview_height">300dp</dimen>
 
-    <dimen name="up_button_width">56dp</dimen>
-    <dimen name="start_margin_title_in_expanded_app_bar">72dp</dimen>
+    <dimen name="start_margin_title_in_expanded_app_bar">12dp</dimen>
 
 </resources>

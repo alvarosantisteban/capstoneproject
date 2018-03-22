@@ -76,7 +76,8 @@ public class MarketDetailFragment extends Fragment {
             });
 
             ((TextView) rootView.findViewById(R.id.market_name)).setText(market.getName());
-            ((TextView) rootView.findViewById(R.id.market_opening)).setText(market.getOpeningHours() +market.getOpeningDays());
+            ((TextView) rootView.findViewById(R.id.market_opening_days)).setText(market.getOpeningDays());
+            ((TextView) rootView.findViewById(R.id.market_opening_hours)).setText(market.getOpeningHours());
             ((TextView) rootView.findViewById(R.id.market_other_info)).setText(market.getOtherInfo());
             ((TextView) rootView.findViewById(R.id.market_contact_info)).setText(market.getOrganizerWebsite());
         }
