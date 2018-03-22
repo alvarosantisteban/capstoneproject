@@ -6,6 +6,10 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 /**
  * A second hand market is defined by its location, the days and hours that opens and the person/company
  * that organizes/manages it.
@@ -96,12 +100,34 @@ public class Market implements Parcelable{
         return name;
     }
 
-    public String getLatitude() {
+    public String getLatitudeString() {
         return latitude;
     }
 
-    public String getLongitude() {
+    public String getLongitudeString() {
         return longitude;
+    }
+
+    public double getLatitude() {
+        NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
+        try {
+            Number number = format.parse(latitude);
+            return number.doubleValue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public double getLongitude() {
+        NumberFormat format = NumberFormat.getInstance(Locale.GERMANY);
+        try {
+            Number number = format.parse(longitude);
+            return number.doubleValue();
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     public String getOpeningDays() {

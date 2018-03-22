@@ -319,8 +319,8 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                 values.put(MarketsContract.Market.COLUMN_NAME_MARKET_ID, market.getId());
                 values.put(MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD, market.getNeighborhood());
                 values.put(MarketsContract.Market.COLUMN_NAME_NAME, market.getName());
-                values.put(MarketsContract.Market.COLUMN_NAME_LATITUDE, market.getLatitude());
-                values.put(MarketsContract.Market.COLUMN_NAME_LONGITUDE, market.getLongitude());
+                values.put(MarketsContract.Market.COLUMN_NAME_LATITUDE, market.getLatitudeString());
+                values.put(MarketsContract.Market.COLUMN_NAME_LONGITUDE, market.getLongitudeString());
                 values.put(MarketsContract.Market.COLUMN_NAME_OPENING_DAYS, market.getOpeningDays());
                 values.put(MarketsContract.Market.COLUMN_NAME_OPENING_HOURS, market.getOpeningHours());
                 values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_NAME, market.getOrganizerNameAndPhone());

@@ -15,6 +15,7 @@
     <dimen name="detail_title_text_size">32sp</dimen>
     <dimen name="detail_body_text_size">22sp</dimen>
     <item name="detail_body_line_spacing_multiplier" format="float" type="fraction">1.25</item>
+    <dimen name="detail_mapview_height">300dp</dimen>
 
     <dimen name="up_button_width">56dp</dimen>
     <dimen name="start_margin_title_in_expanded_app_bar">72dp</dimen>

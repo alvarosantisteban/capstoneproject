@@ -1,26 +1,9 @@
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:background="@color/colorAccent"/>
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible"
-        tools:background="@color/colorPrimary"/>
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
@@ -61,6 +44,7 @@
         android:id="@+id/market_detail_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:fillViewport="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
@@ -69,7 +53,7 @@
         android:layout_height="@dimen/fab_height_width"
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_place_white_24px"
-        android:onClick="shareBook"
+        android:onClick="shareMarketDetails"
         android:elevation="@dimen/fab_elevation"
         android:stateListAnimator="@animator/fab_state_list_anim"
         app:pressedTranslationZ="@dimen/fab_press_translation_z"

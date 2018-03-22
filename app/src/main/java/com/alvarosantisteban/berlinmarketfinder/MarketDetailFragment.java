@@ -11,6 +11,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.alvarosantisteban.berlinmarketfinder.model.Market;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * A fragment representing a single Market detail screen.
@@ -22,7 +28,9 @@ public class MarketDetailFragment extends Fragment {
 
     public static final String ARG_ITEM = "item";
 
+    private GoogleMap map;
     private Market market;
+    private MapView mapView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -52,7 +60,21 @@ public class MarketDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.market_detail, container, false);
 
+        mapView = rootView.findViewById(R.id.market_mapView);
+        mapView.onCreate(savedInstanceState);
         if (market != null) {
+            mapView.getMapAsync(new OnMapReadyCallback() {
+                @Override
+                public void onMapReady(GoogleMap googleMap) {
+                    map = googleMap;
+
+                    LatLng marketPos = new LatLng(market.getLatitude(), market.getLongitude());
+                    map.addMarker(new MarkerOptions().position(marketPos).title(market.getName()));
+                    map.moveCamera(CameraUpdateFactory.newLatLng(marketPos));
+                    map.animateCamera(CameraUpdateFactory.zoomTo(14));
+                }
+            });
+
             ((TextView) rootView.findViewById(R.id.market_name)).setText(market.getName());
             ((TextView) rootView.findViewById(R.id.market_opening)).setText(market.getOpeningHours() +market.getOpeningDays());
             ((TextView) rootView.findViewById(R.id.market_other_info)).setText(market.getOtherInfo());
@@ -60,5 +82,41 @@ public class MarketDetailFragment extends Fragment {
         }
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mapView.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mapView.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mapView.onDestroy();
     }
 }

@@ -30,4 +30,8 @@
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:textIsSelectable="true" />
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/market_mapView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/detail_mapview_height" />
 </LinearLayout>
