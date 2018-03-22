@@ -6,6 +6,8 @@
 
     <string name="menu_action_reload">Reload</string>
     <string name="menu_action_filter">Filter</string>
+    <string name="action_share">Share</string>
+    <string name="share_text_tag">We should go together to \"%1$s\"</string>
 
     <string-array name="sort_order">
         <item>All</item>

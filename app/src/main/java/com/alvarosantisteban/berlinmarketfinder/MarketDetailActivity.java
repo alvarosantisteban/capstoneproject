@@ -3,10 +3,12 @@ package com.alvarosantisteban.berlinmarketfinder;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.alvarosantisteban.berlinmarketfinder.model.Market;
@@ -105,5 +107,13 @@ public class MarketDetailActivity extends AppCompatActivity {
 
         ImageView cover = findViewById(R.id.market_cover);
         cover.setImageResource(neighborhoodImageId);
+    }
+
+    public void shareMarketDetails(View view) {
+        Market market = getIntent().getParcelableExtra(MarketDetailFragment.ARG_ITEM);
+        startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(this)
+                .setType("text/plain")
+                .setText(getString(R.string.share_text_tag, market.getName()))
+                .getIntent(), getString(R.string.action_share)));
     }
 }

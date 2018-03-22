@@ -52,7 +52,7 @@
         android:layout_width="@dimen/fab_height_width"
         android:layout_height="@dimen/fab_height_width"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_place_white_24px"
+        android:src="@drawable/ic_share_white_24px"
         android:onClick="shareMarketDetails"
         android:elevation="@dimen/fab_elevation"
         android:stateListAnimator="@animator/fab_state_list_anim"
