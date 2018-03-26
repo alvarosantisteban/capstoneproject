@@ -14,5 +14,5 @@ public interface BerlinMarketsAPI {
     String BERLIN_MARKETS_BASE_URL = "http://www.berlin.de/sen/web/service/maerkte-feste/wochen-troedelmaerkte/index.php/";
 
     @GET("index/index.json")
-    Call<MarketContainer> getMarkets(@Query("bezirk") String neighborhood);
+    Call<MarketContainer> getMarkets(@Query("bezirk") String neighborhood, @Query("ipp") String limit);
 }

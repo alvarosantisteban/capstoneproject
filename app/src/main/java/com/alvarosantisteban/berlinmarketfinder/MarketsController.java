@@ -25,6 +25,7 @@ import static com.alvarosantisteban.berlinmarketfinder.MarketListActivity.FILTER
 class MarketsController implements Callback<MarketContainer> {
 
     private static final String TAG = MarketsController.class.getSimpleName();
+    private static final String MAX_DISPLAYED_MARKETS = "200";
 
     void start(@Nullable String selectedNeighborhood) {
 
@@ -34,7 +35,8 @@ class MarketsController implements Callback<MarketContainer> {
                 .build();
 
         BerlinMarketsAPI berlinMarketsAPI = retrofit.create(BerlinMarketsAPI.class);
-        Call<MarketContainer> call = berlinMarketsAPI.getMarkets(selectedNeighborhood != null ? selectedNeighborhood : FILTER_ALL_NEIGHBORHOODS);
+        Call<MarketContainer> call = berlinMarketsAPI.getMarkets(selectedNeighborhood != null ? selectedNeighborhood : FILTER_ALL_NEIGHBORHOODS,
+                MAX_DISPLAYED_MARKETS);
         call.enqueue(this);
     }
 
