@@ -118,6 +118,8 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     // Reached from the bus when the list of markets that has been downloaded and parsed is available
     @Subscribe
     public void onMarketsDownloaded(List<Market> markets) {
+        this.markets = markets;
+
         // Set the markets in the recycler view
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
