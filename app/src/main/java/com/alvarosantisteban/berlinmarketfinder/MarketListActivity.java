@@ -13,7 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -25,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -123,7 +123,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
         // Set the markets in the recycler view
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
-        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         // Delete all the markets with the ID of the new ones, and insert all the new markets
         new OperateWithDBAsyncTask(this, markets).execute(DB_OPERATIONS.REMOVE_AND_ADD);
@@ -280,7 +279,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                         activity.markets = getMarketsFromCursor(cursor);
 
                         activity.recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(activity, activity.markets, activity.mTwoPane));
-                        activity.recyclerView.addItemDecoration(new DividerItemDecoration(activity.recyclerView.getContext(), DividerItemDecoration.VERTICAL));
                     } else {
                         // No entries, ask to API
                         MarketsController marketsController = new MarketsController();
@@ -418,6 +416,8 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.neighborHoodImage.setImageResource(Util.getCoverImage(mValues.get(position).getNeighborhood(), mParentActivity));
+
             holder.neighborhood.setText(mValues.get(position).getNeighborhood());
             holder.name.setText(mValues.get(position).getName());
             holder.openDays.setText(mValues.get(position).getOpeningDays());
@@ -433,6 +433,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+            final ImageView neighborHoodImage;
             final TextView neighborhood;
             final TextView name;
             final TextView openDays;
@@ -440,6 +441,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
             ViewHolder(View view) {
                 super(view);
+                neighborHoodImage = view.findViewById(R.id.market_cover);
                 neighborhood = view.findViewById(R.id.markets_list_neighborhood);
                 name = view.findViewById(R.id.markets_list_name);
                 openDays = view.findViewById(R.id.markets_list_days);

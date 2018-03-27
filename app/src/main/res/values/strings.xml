@@ -13,8 +13,10 @@
     <string name="detail_activity_contact_info_tag">Contact info:</string>
     <string name="detail_activity_other_info_tag">Other info:</string>
     <string name="detail_activity_opening_info_tag">Opening days and hours</string>
-    <string name="content_description_open_website">click to open organizer\'s website</string>
+
+    <string name="content_description_open_website">Click to open the organizer\'s website</string>
     <string name="content_description_send_email">Click to send an email to the organizer</string>
+    <string name="content_description_neighborhood_cover">Representative image of the neighborhood</string>
 
     <string-array name="sort_order">
         <item>All</item>

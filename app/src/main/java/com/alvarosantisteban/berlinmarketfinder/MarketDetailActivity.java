@@ -2,7 +2,6 @@ package com.alvarosantisteban.berlinmarketfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +55,8 @@ public class MarketDetailActivity extends AppCompatActivity {
                     .add(R.id.market_detail_container, fragment)
                     .commit();
 
-            setCoverImage(market.getNeighborhood());
+            ImageView cover = findViewById(R.id.market_cover);
+            cover.setImageResource(Util.getCoverImage(market.getNeighborhood(), this));
         }
     }
 
@@ -74,39 +74,6 @@ public class MarketDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void setCoverImage(@NonNull String neighborhood) {
-        int neighborhoodImageId = 0;
-        String[] neighborhoods = getResources().getStringArray(R.array.sort_order);
-        if (neighborhood.equals(neighborhoods[1])) {
-            neighborhoodImageId = R.drawable.neighborhoods_01_charlottenburg;
-        } else if (neighborhood.equals(neighborhoods[2])) {
-            neighborhoodImageId = R.drawable.neighborhoods_02_fhain_kreuzberg;
-        } else if (neighborhood.equals(neighborhoods[3])) {
-            neighborhoodImageId = R.drawable.neighborhoods_03_lichtenberg;
-        } else if (neighborhood.equals(neighborhoods[4])) {
-            neighborhoodImageId = R.drawable.neighborhoods_04_marzahn;
-        } else if (neighborhood.equals(neighborhoods[5])) {
-            neighborhoodImageId = R.drawable.neighborhoods_05_mitte;
-        } else if (neighborhood.equals(neighborhoods[6])) {
-            neighborhoodImageId = R.drawable.neighborhoods_06_neukoelln;
-        } else if (neighborhood.equals(neighborhoods[7])) {
-            neighborhoodImageId = R.drawable.neighborhoods_07_pankow;
-        } else if (neighborhood.equals(neighborhoods[8])) {
-            neighborhoodImageId = R.drawable.neighborhoods_08_reinickendorf;
-        } else if (neighborhood.equals(neighborhoods[9])) {
-            neighborhoodImageId = R.drawable.neighborhoods_09_steglitz;
-        } else if (neighborhood.equals(neighborhoods[10])) {
-            neighborhoodImageId = R.drawable.neighborhoods_10_schoeneberg;
-        } else if (neighborhood.equals(neighborhoods[11])) {
-            neighborhoodImageId = R.drawable.neighborhoods_11_treptow;
-        } else if (neighborhood.contains(neighborhoods[12])) { // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
-            neighborhoodImageId = R.drawable.neighborhoods_12_brandenburg;
-        }
-
-        ImageView cover = findViewById(R.id.market_cover);
-        cover.setImageResource(neighborhoodImageId);
     }
 
     public void shareMarketDetails(View view) {

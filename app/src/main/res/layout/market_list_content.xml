@@ -6,60 +6,77 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/background_view"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
+    <ImageView
+        android:id="@+id/market_cover"
+        android:layout_width="@dimen/rv_item_image_size"
+        android:layout_height="@dimen/rv_item_image_size"
+        android:layout_marginTop="@dimen/standard_margin"
         android:background="@color/neighborhoodBackground"
+        android:src="@drawable/neighborhoods_01_charlottenburg"
+        android:scaleType="centerCrop"
+        android:alpha="0.5"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.046"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/content_description_neighborhood_cover" />
 
     <TextView
         android:id="@+id/markets_list_neighborhood"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/background_view"
-        app:layout_constraintBottom_toTopOf="@+id/background_view"
-        tools:layout_editor_absoluteY="8dp"
-        tools:text="Neukölln" />
+        android:layout_marginTop="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/medium_margin"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/smallest_text_size"
+        android:includeFontPadding="false"
+        app:layout_constraintEnd_toEndOf="@+id/market_cover"
+        app:layout_constraintStart_toStartOf="@+id/market_cover"
+        app:layout_constraintTop_toTopOf="@+id/market_cover"
+        tools:text="Neukölln fsdfdsfsdf dsffds" />
 
     <TextView
         android:id="@+id/markets_list_name"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/background_view"
+        app:layout_constraintStart_toEndOf="@+id/market_cover"
+        app:layout_constraintTop_toTopOf="@+id/market_cover"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_marginRight="@dimen/standard_margin"
+        android:layout_marginStart="@dimen/medium_margin"
+        android:layout_marginLeft="@dimen/medium_margin"
         tools:text="Flohmarket Neukoller" />
 
 
     <TextView
         android:id="@+id/markets_list_days"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:gravity="center_horizontal"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/markets_list_hours"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/markets_list_name"
         app:layout_constraintTop_toBottomOf="@+id/markets_list_name"
+        style="@style/rvItemOpeninInfo"
         tools:text="Mo - Fr Sa	" />
 
     <TextView
         android:id="@+id/markets_list_hours"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:textAppearance="?attr/textAppearanceListItem"
-        android:gravity="center_horizontal"
+        android:layout_marginEnd="@dimen/standard_margin"
+        android:layout_marginRight="@dimen/standard_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/markets_list_days"
         app:layout_constraintTop_toBottomOf="@+id/markets_list_name"
-        tools:text="07:00 - 16:00 07:00 - 13:00	" />
+        style="@style/rvItemOpeninInfo"
+        android:gravity="end"
+        tools:text="07:00 - 16:00 07:00 - 13:00" />
 
 </android.support.constraint.ConstraintLayout>
