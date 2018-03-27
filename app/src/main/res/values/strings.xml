@@ -10,6 +10,12 @@
     <string name="share_text_tag">We should go together to \"%1$s\"</string>
     <string name="map_activity_user_marker_title">You</string>
 
+    <string name="detail_activity_contact_info_tag">Contact info:</string>
+    <string name="detail_activity_other_info_tag">Other info:</string>
+    <string name="detail_activity_opening_info_tag">Opening days and hours</string>
+    <string name="content_description_open_website">click to open organizer\'s website</string>
+    <string name="content_description_send_email">Click to send an email to the organizer</string>
+
     <string-array name="sort_order">
         <item>All</item>
         <item>Charlottenburg-Wilmersdorf</item>

@@ -2,6 +2,7 @@ package com.alvarosantisteban.berlinmarketfinder.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -70,7 +71,7 @@ public class Market implements Parcelable{
         this.openingHours = openingHours;
         this.organizerNameAndPhone = organizerNameAndPhone;
         this.organizerEmail = organizerEmail;
-        this.organizerWebsite = organizerWebsite;
+        this.organizerWebsite = ensureWebsiteFormat(organizerWebsite);
         this.otherInfo = otherInfo;
     }
 
@@ -152,6 +153,15 @@ public class Market implements Parcelable{
 
     public String getOtherInfo() {
         return otherInfo;
+    }
+
+    private String ensureWebsiteFormat(@Nullable String websiteUrl) {
+        if (websiteUrl != null) {
+            if (!websiteUrl.startsWith("http")) {
+                return "http://" +websiteUrl;
+            }
+        }
+        return websiteUrl;
     }
 
     @Override

@@ -17,4 +17,18 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="tagText">
+        <item name="android:paddingRight">@dimen/standard_margin</item>
+        <item name="android:paddingLeft">@dimen/standard_margin</item>
+        <item name="android:textIsSelectable">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="textDetail">
+        <item name="android:paddingRight">@dimen/standard_margin</item>
+        <item name="android:paddingLeft">@dimen/standard_margin</item>
+        <item name="android:paddingBottom">@dimen/standard_margin</item>
+        <item name="android:paddingTop">@dimen/small_margin</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
 </resources>

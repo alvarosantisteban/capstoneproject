@@ -10,10 +10,16 @@
         android:id="@+id/market_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
+        android:textSize="@dimen/detail_body_text_size"
+        android:padding="@dimen/standard_margin"
         android:textIsSelectable="true"
         tools:text="Neukoller"/>
-
+    <TextView
+        android:id="@+id/market_opening_info_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/tagText"
+        android:text="@string/detail_activity_opening_info_tag"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,32 +29,64 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="16dp"
-            android:textIsSelectable="true"
+            style="@style/textDetail"
             tools:text="Sa - Do"/>
         <TextView
             android:id="@+id/market_opening_hours"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="16dp"
-            android:textIsSelectable="true"
+            style="@style/textDetail"
+            android:gravity="end"
             tools:text="09:00 - 18:00"/>
     </LinearLayout>
+    <TextView
+        android:id="@+id/market_other_info_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/tagText"
+        android:text="@string/detail_activity_other_info_tag"/>
     <TextView
         android:id="@+id/market_other_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"
+        style="@style/textDetail"
         tools:text="The other info bla bla bla"/>
     <TextView
-        android:id="@+id/market_contact_info"
+        android:id="@+id/market_contact_info_tag"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:textIsSelectable="true"
-        tools:text="Contact info"/>
+        style="@style/tagText"
+        android:text="@string/detail_activity_contact_info_tag"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/market_contact_info_name_and_phone"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            style="@style/textDetail"
+            tools:text="Eduardo Mayo"/>
+        <ImageView
+            android:id="@+id/market_contact_info_website"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="?android:borderlessButtonStyle"
+            android:src="@drawable/ic_open_website"
+            android:tint="@color/colorBlack"
+            android:contentDescription="@string/content_description_open_website" />
+        <ImageView
+            android:id="@+id/market_contact_info_email"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="?android:borderlessButtonStyle"
+            android:contentDescription="@string/content_description_send_email"
+            android:src="@drawable/ic_mail_outline_black_18px"/>
+    </LinearLayout>
     <com.google.android.gms.maps.MapView
         android:id="@+id/market_mapView"
         android:layout_width="match_parent"

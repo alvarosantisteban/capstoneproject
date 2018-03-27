@@ -1,13 +1,17 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.alvarosantisteban.berlinmarketfinder.model.Market;
@@ -78,8 +82,16 @@ public class MarketDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.market_name)).setText(market.getName());
             ((TextView) rootView.findViewById(R.id.market_opening_days)).setText(market.getOpeningDays());
             ((TextView) rootView.findViewById(R.id.market_opening_hours)).setText(market.getOpeningHours());
-            ((TextView) rootView.findViewById(R.id.market_other_info)).setText(market.getOtherInfo());
-            ((TextView) rootView.findViewById(R.id.market_contact_info)).setText(market.getOrganizerWebsite());
+            setTextViewIfNonEmpty((TextView) rootView.findViewById(R.id.market_other_info),
+                    market.getOtherInfo(),
+                    (TextView) rootView.findViewById(R.id.market_other_info_tag));
+            setTextViewIfNonEmpty((TextView) rootView.findViewById(R.id.market_contact_info_name_and_phone),
+                    market.getOrganizerNameAndPhone(),
+                    (TextView) rootView.findViewById(R.id.market_contact_info_tag));
+            ImageView website = rootView.findViewById(R.id.market_contact_info_website);
+            ImageView email = rootView.findViewById(R.id.market_contact_info_email);
+            displayImageViewIfNonEmpty(website, market.getOrganizerWebsite());
+            displayImageViewIfNonEmpty(email, market.getOrganizerEmail());
         }
 
         return rootView;
@@ -119,5 +131,37 @@ public class MarketDetailFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+    }
+
+    private void setTextViewIfNonEmpty(@NonNull TextView view, @Nullable String text, @Nullable TextView relatedTag) {
+        if (text != null && !text.equals("")) {
+            view.setText(text);
+        } else {
+            view.setVisibility(View.GONE);
+            if (relatedTag != null) {
+                relatedTag.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void displayImageViewIfNonEmpty(@NonNull ImageView view, @Nullable final String link) {
+        if (link != null && !link.equals("")) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent;
+                    if(link.startsWith("http")) {
+                        intent = new Intent(Intent.ACTION_VIEW,
+                                Uri.parse(link));
+                    } else {
+                        intent = new Intent(Intent.ACTION_SENDTO,
+                                Uri.parse(link));
+                    }
+                    startActivity(intent);
+                }
+            });
+        } else {
+            view.setVisibility(View.GONE);
+        }
     }
 }
