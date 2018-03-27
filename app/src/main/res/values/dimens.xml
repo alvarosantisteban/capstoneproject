@@ -21,4 +21,6 @@
 
     <dimen name="start_margin_title_in_expanded_app_bar">12dp</dimen>
 
+    <dimen name="spinner_width">180dp</dimen>
+
 </resources>

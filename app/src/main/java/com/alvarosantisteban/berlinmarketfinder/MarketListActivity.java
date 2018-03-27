@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -136,11 +137,14 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         spinner = (Spinner) item.getActionView();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.sort_order, android.R.layout.simple_spinner_item);
+                R.array.sort_order, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         int spinnerPos = PreferenceManager.getDefaultSharedPreferences(this).getInt(SPINNER_POS, POS_ALL);
         spinner.setAdapter(adapter);
+        ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(new ViewGroup.LayoutParams((int) getResources().getDimension(R.dimen.spinner_width), ViewGroup.LayoutParams.WRAP_CONTENT));
+        spinner.setLayoutParams(lp);
+        spinner.setGravity(Gravity.END);
         spinner.setSelection(spinnerPos);
         spinner.setOnItemSelectedListener(this);
         spinner.setOnTouchListener(new View.OnTouchListener() {
