@@ -101,7 +101,7 @@ public class MarketDetailActivity extends AppCompatActivity {
             neighborhoodImageId = R.drawable.neighborhoods_10_schoeneberg;
         } else if (neighborhood.equals(neighborhoods[11])) {
             neighborhoodImageId = R.drawable.neighborhoods_11_treptow;
-        } else if (neighborhood.equals(neighborhoods[12])) {
+        } else if (neighborhood.contains(neighborhoods[12])) { // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
             neighborhoodImageId = R.drawable.neighborhoods_12_brandenburg;
         }
 
