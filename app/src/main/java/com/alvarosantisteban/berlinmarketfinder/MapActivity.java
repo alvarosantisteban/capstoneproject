@@ -105,9 +105,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Intent intent = new Intent(MapActivity.this, MarketDetailActivity.class);
-                intent.putExtra(MarketDetailFragment.ARG_ITEM, getMarketFromId(markets, marker.getTag() != null ? (String) marker.getTag() : ""));
-                startActivity(intent);
+                if (marker.getTag() != null && !marker.getTag().equals("")) {
+                    Intent intent = new Intent(MapActivity.this, MarketDetailActivity.class);
+                    intent.putExtra(MarketDetailFragment.ARG_ITEM, getMarketFromId(markets, (String) marker.getTag()));
+                    startActivity(intent);
+                }
             }
         });
 
