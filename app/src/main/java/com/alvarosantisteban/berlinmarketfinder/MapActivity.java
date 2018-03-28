@@ -30,10 +30,14 @@ import java.util.List;
 /**
  * Display a map with markers for the markets selected in MarketListActivity.
  */
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMapLoadedCallback {
 
     public static final String ARG_MARKETS = "markets";
     private static final int PERMISSIONS_REQUEST_CODE = 1;
+    private static final double BERLIN_DEFAULT_LAT = 52.496511;
+    private static final double BERLIN_DEFAULT_LNG = 13.367152;
+    private static final int DEFAULT_CAMERA_ZOOM = 12;
+
 
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -99,6 +103,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
         this.googleMap = googleMap;
+        this.googleMap.setOnMapLoadedCallback(this);
 
         final List<Market> markets = getIntent().getParcelableArrayListExtra(ARG_MARKETS);
 
@@ -114,13 +119,27 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         });
 
         if (markets != null) {
+            LatLng marketPos = new LatLng(BERLIN_DEFAULT_LAT, BERLIN_DEFAULT_LNG);
             for (Market market : markets) {
-                LatLng marketPos = new LatLng(market.getLatitude(), market.getLongitude());
+                marketPos = new LatLng(market.getLatitude(), market.getLongitude());
+                if(marketPos.latitude == -1 || marketPos.longitude == -1) continue; // If pos invalid, do not add the marker
                 Marker marker = googleMap.addMarker(new MarkerOptions().position(marketPos).title(market.getName()));
                 marker.setTag(market.getId());
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(marketPos));
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(12));
             }
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(marketPos));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_CAMERA_ZOOM));
+        }
+    }
+
+    @Override
+    public void onMapLoaded() {
+        // This is needed because in some devices the camera can't make movements until this callback
+        // is reached, in which case the latitude is around 10 and all the markers for Berlin are greater
+        // than 50
+        if(googleMap.getCameraPosition().target.latitude < 50) {
+            LatLng marketPos = new LatLng(BERLIN_DEFAULT_LAT, BERLIN_DEFAULT_LNG);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(marketPos));
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_CAMERA_ZOOM));
         }
     }
 

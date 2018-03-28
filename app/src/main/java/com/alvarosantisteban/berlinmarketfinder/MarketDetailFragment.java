@@ -28,10 +28,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * in two-pane mode (on tablets) or a {@link MarketDetailActivity}
  * on handsets.
  */
-public class MarketDetailFragment extends Fragment {
+public class MarketDetailFragment extends Fragment implements GoogleMap.OnMapLoadedCallback {
 
     public static final String ARG_ITEM = "item";
     private static final String KEY_SAVED_MARKET = "savedMarket";
+    private static final int DEFAULT_CAMERA_ZOOM = 14;
 
     private GoogleMap map;
     private Market market;
@@ -76,6 +77,7 @@ public class MarketDetailFragment extends Fragment {
                 @Override
                 public void onMapReady(GoogleMap googleMap) {
                     map = googleMap;
+                    map.setOnMapLoadedCallback(MarketDetailFragment.this);
 
                     LatLng marketPos = new LatLng(market.getLatitude(), market.getLongitude());
                     map.addMarker(new MarkerOptions().position(marketPos).title(market.getName()));
@@ -168,6 +170,18 @@ public class MarketDetailFragment extends Fragment {
             });
         } else {
             view.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onMapLoaded() {
+        // This is needed because in some devices the camera can't make movements until this callback
+        // is reached, in which case the latitude is around 10 and all the markers for Berlin are greater
+        // than 50.
+        if(map.getCameraPosition().target.latitude < 50 && market != null) {
+            LatLng marketPos = new LatLng(market.getLatitude(), market.getLongitude());
+            map.moveCamera(CameraUpdateFactory.newLatLng(marketPos));
+            map.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_CAMERA_ZOOM));
         }
     }
 }
