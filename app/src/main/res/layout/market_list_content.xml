@@ -11,7 +11,7 @@
         android:layout_width="@dimen/rv_item_image_size"
         android:layout_height="@dimen/rv_item_image_size"
         android:layout_marginTop="@dimen/standard_margin"
-        android:background="@color/neighborhoodBackground"
+        android:background="@color/colorBackground"
         android:src="@drawable/neighborhoods_01_charlottenburg"
         android:scaleType="centerCrop"
         android:alpha="0.5"
