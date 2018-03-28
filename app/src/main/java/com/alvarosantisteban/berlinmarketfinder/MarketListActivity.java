@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -123,6 +124,10 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
         // Set the markets in the recycler view
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
+        int columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
+        StaggeredGridLayoutManager sglm =
+                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(sglm);
 
         // Delete all the markets with the ID of the new ones, and insert all the new markets
         new OperateWithDBAsyncTask(this, markets).execute(DB_OPERATIONS.REMOVE_AND_ADD);
@@ -213,10 +218,12 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // Save the spinner position
-        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-        editor.putInt(SPINNER_POS, spinner.getSelectedItemPosition());
-        editor.apply();
+        if(spinner != null) {
+            // Save the spinner position
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+            editor.putInt(SPINNER_POS, spinner.getSelectedItemPosition());
+            editor.apply();
+        }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -279,6 +286,10 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                         activity.markets = getMarketsFromCursor(cursor);
 
                         activity.recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(activity, activity.markets, activity.mTwoPane));
+                        int columnCount = activity.mTwoPane || !activity.getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
+                        StaggeredGridLayoutManager sglm =
+                                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+                        activity.recyclerView.setLayoutManager(sglm);
                     } else {
                         // No entries, ask to API
                         MarketsController marketsController = new MarketsController();
