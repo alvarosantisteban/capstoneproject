@@ -31,6 +31,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MarketDetailFragment extends Fragment {
 
     public static final String ARG_ITEM = "item";
+    private static final String KEY_SAVED_MARKET = "savedMarket";
 
     private GoogleMap map;
     private Market market;
@@ -49,13 +50,17 @@ public class MarketDetailFragment extends Fragment {
 
         if (getArguments() != null && getArguments().containsKey(ARG_ITEM)) {
             market = getArguments().getParcelable(ARG_ITEM);
+        } else if(savedInstanceState.containsKey(KEY_SAVED_MARKET)) {
+            market = savedInstanceState.getParcelable(KEY_SAVED_MARKET);
+        } else {
+            throw new IllegalStateException("There is no market neither from the arguments or savedInstance");
+        }
 
-            Activity activity = this.getActivity();
-            assert activity != null;
-            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.collapsing_toolbar);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(market.getName());
-            }
+        Activity activity = this.getActivity();
+        assert activity != null;
+        CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.collapsing_toolbar);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(market.getName());
         }
     }
 
@@ -113,6 +118,7 @@ public class MarketDetailFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
+        outState.putParcelable(KEY_SAVED_MARKET, market);
     }
 
     @Override
