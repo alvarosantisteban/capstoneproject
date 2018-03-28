@@ -2,7 +2,10 @@ package com.alvarosantisteban.berlinmarketfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -56,10 +59,56 @@ public class MarketDetailActivity extends AppCompatActivity {
                     .add(R.id.market_detail_container, fragment)
                     .commit();
         }
+        toolbarSetup(market);
+
+    }
+
+    private void toolbarSetup(Market market) {
+        // Set the title and cover image
         ImageView cover = findViewById(R.id.market_cover);
         cover.setImageResource(Util.getCoverImage(market.getNeighborhood(), this));
-        CollapsingToolbarLayout appBarLayout = findViewById(R.id.collapsing_toolbar);
-        appBarLayout.setTitle(market.getName());
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        collapsingToolbarLayout.setTitle(market.getName());
+
+        // Make the FAB button appear and disappear
+        AppBarLayout appBarLayout = findViewById(R.id.app_bar_layout);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                FloatingActionButton fab = findViewById(R.id.share_fab);
+                if (Math.abs(verticalOffset)-appBarLayout.getTotalScrollRange() == 0) {
+                    //  Collapsed
+                    hideFloatingActionButton(fab);
+                }
+                else {
+                    //Expanded
+                    showFloatingActionButton(fab);
+                }
+            }
+        });
+    }
+
+    // Method taken from https://stackoverflow.com/a/43077760/1250021
+    private void hideFloatingActionButton(FloatingActionButton fab) {
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        FloatingActionButton.Behavior behavior = (FloatingActionButton.Behavior) params.getBehavior();
+
+        if (behavior != null) {
+            behavior.setAutoHideEnabled(false);
+        }
+
+        fab.hide();
+    }
+
+    // Method taken from https://stackoverflow.com/a/43077760/1250021
+    private void showFloatingActionButton(FloatingActionButton fab) {
+        fab.show();
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) fab.getLayoutParams();
+        FloatingActionButton.Behavior behavior = (FloatingActionButton.Behavior) params.getBehavior();
+
+        if (behavior != null) {
+            behavior.setAutoHideEnabled(true);
+        }
     }
 
     @Override
