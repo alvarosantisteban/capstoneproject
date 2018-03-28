@@ -128,6 +128,9 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(sglm);
+        if(mTwoPane && markets.get(0) != null) {
+            loadFragmentForMarket(markets.get(0));
+        }
 
         // Delete all the markets with the ID of the new ones, and insert all the new markets
         new OperateWithDBAsyncTask(this, markets).execute(DB_OPERATIONS.REMOVE_AND_ADD);
@@ -226,6 +229,16 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         }
     }
 
+    private void loadFragmentForMarket(@NonNull Market market) {
+        Bundle arguments = new Bundle();
+        arguments.putParcelable(MarketDetailFragment.ARG_ITEM, market);
+        MarketDetailFragment fragment = new MarketDetailFragment();
+        fragment.setArguments(arguments);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.market_detail_container, fragment)
+                .commit();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////
     // ASYNC TASK FOR CONTENT PROVIDER
     ////////////////////////////////////////////////////////////////////////////////
@@ -289,6 +302,9 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                         StaggeredGridLayoutManager sglm =
                                 new StaggeredGridLayoutManager(activity.columnCount, StaggeredGridLayoutManager.VERTICAL);
                         activity.recyclerView.setLayoutManager(sglm);
+                        if(activity.mTwoPane && activity.markets.get(0) != null) {
+                            activity.loadFragmentForMarket(activity.markets.get(0));
+                        }
                     } else {
                         // No entries, ask to API
                         MarketsController marketsController = new MarketsController();
@@ -392,13 +408,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             public void onClick(View view) {
                 Market market = (Market) view.getTag();
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putParcelable(MarketDetailFragment.ARG_ITEM, market);
-                    MarketDetailFragment fragment = new MarketDetailFragment();
-                    fragment.setArguments(arguments);
-                    mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.market_detail_container, fragment)
-                            .commit();
+                    mParentActivity.loadFragmentForMarket(market);
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, MarketDetailActivity.class);
