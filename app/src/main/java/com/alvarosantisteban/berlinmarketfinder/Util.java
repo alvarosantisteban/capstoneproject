@@ -31,13 +31,15 @@ final class Util {
         } else if (neighborhood.equals(neighborhoods[8])) {
             neighborhoodImageId = R.drawable.neighborhoods_08_reinickendorf;
         } else if (neighborhood.equals(neighborhoods[9])) {
-            neighborhoodImageId = R.drawable.neighborhoods_09_steglitz;
+            neighborhoodImageId = R.drawable.neighborhoods_09_spandau;
         } else if (neighborhood.equals(neighborhoods[10])) {
-            neighborhoodImageId = R.drawable.neighborhoods_10_schoeneberg;
+            neighborhoodImageId = R.drawable.neighborhoods_10_steglitz;
         } else if (neighborhood.equals(neighborhoods[11])) {
-            neighborhoodImageId = R.drawable.neighborhoods_11_treptow;
-        } else if (neighborhood.contains(neighborhoods[12])) { // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
-            neighborhoodImageId = R.drawable.neighborhoods_12_brandenburg;
+            neighborhoodImageId = R.drawable.neighborhoods_11_schoeneberg;
+        } else if (neighborhood.equals(neighborhoods[12])) {
+            neighborhoodImageId = R.drawable.neighborhoods_12_treptow;
+        } else if (neighborhood.contains(neighborhoods[13])) { // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
+            neighborhoodImageId = R.drawable.neighborhoods_13_brandenburg;
         }
         return neighborhoodImageId;
     }

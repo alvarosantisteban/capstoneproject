@@ -350,7 +350,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         private Cursor queryMarkets(@NonNull MarketListActivity activity, @Nullable String neighborhood) {
             String selection;
             String[] selectionArgs = {neighborhood};
-            if (neighborhood != null && neighborhood.contains(activity.getResources().getStringArray(R.array.sort_order)[12])) {
+            if (neighborhood != null && neighborhood.contains(activity.getResources().getStringArray(R.array.sort_order)[13])) {
                 // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
                 selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + " LIKE 'Brandenburg%'";
                 selectionArgs = null;
