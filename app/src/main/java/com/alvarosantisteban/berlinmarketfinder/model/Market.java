@@ -148,7 +148,7 @@ public class Market implements Parcelable{
     }
 
     public String getOrganizerWebsite() {
-        return organizerWebsite;
+        return ensureWebsiteFormat(organizerWebsite);
     }
 
     public String getOtherInfo() {
@@ -156,7 +156,7 @@ public class Market implements Parcelable{
     }
 
     private String ensureWebsiteFormat(@Nullable String websiteUrl) {
-        if (websiteUrl != null) {
+        if (websiteUrl != null && !websiteUrl.equals("")) {
             if (!websiteUrl.startsWith("http")) {
                 return "http://" +websiteUrl;
             }
