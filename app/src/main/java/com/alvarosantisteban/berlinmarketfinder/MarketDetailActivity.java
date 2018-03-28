@@ -2,6 +2,7 @@ package com.alvarosantisteban.berlinmarketfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class MarketDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        Market market = getIntent().getParcelableExtra(MarketDetailFragment.ARG_ITEM);
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -43,7 +45,6 @@ public class MarketDetailActivity extends AppCompatActivity {
         // http://developer.android.com/guide/components/fragments.html
         //
         if (savedInstanceState == null) {
-            Market market = getIntent().getParcelableExtra(MarketDetailFragment.ARG_ITEM);
 
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
@@ -54,10 +55,11 @@ public class MarketDetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.market_detail_container, fragment)
                     .commit();
-
-            ImageView cover = findViewById(R.id.market_cover);
-            cover.setImageResource(Util.getCoverImage(market.getNeighborhood(), this));
         }
+        ImageView cover = findViewById(R.id.market_cover);
+        cover.setImageResource(Util.getCoverImage(market.getNeighborhood(), this));
+        CollapsingToolbarLayout appBarLayout = findViewById(R.id.collapsing_toolbar);
+        appBarLayout.setTitle(market.getName());
     }
 
     @Override
