@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_market_list">Mercados</string>
+    <string name="title_market_detail">Mercado</string>
+
+    <string name="menu_action_reload">Cargar de nuevo</string>
+    <string name="menu_action_filter">Filtrar</string>
+    <string name="action_share">Compartir</string>
+    <string name="share_text_tag">Tenemos que ir juntxs a \"%1$s\"</string>
+    <string name="map_activity_user_marker_title">Tú</string>
+
+    <string name="detail_activity_contact_info_tag">Información de contacto:</string>
+    <string name="detail_activity_other_info_tag">Otra información:</string>
+    <string name="detail_activity_opening_info_tag">Días de apertura y horario:</string>
+
+    <string name="content_description_open_website">Pulsa para ir a la web del organizador</string>
+    <string name="content_description_send_email">Pulsa para enviar un correo electrónico al organizador</string>
+    <string name="content_description_neighborhood_cover">Imagen representativa del barrio</string>
+
+    <string-array name="sort_order">
+        <item>Todos</item>
+        <item>Charlottenburg-Wilmersdorf</item>
+        <item>Friedrichshain-Kreuzberg</item>
+        <item>Lichtenberg</item>
+        <item>Marzahn-Hellersdorf</item>
+        <item>Mitte</item>
+        <item>Neukölln</item>
+        <item>Pankow</item>
+        <item>Reinickendorf</item>
+        <item>Spandau</item>
+        <item>Steglitz-Zehlendorf</item>
+        <item>Tempelhof-Schöneberg</item>
+        <item>Treptow-Köpenick</item>
+        <item>Brandenburg</item>
+    </string-array>
+</resources>

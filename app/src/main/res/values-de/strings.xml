@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_market_list">Märkte</string>
+    <string name="title_market_detail">Markt</string>
+
+    <string name="menu_action_reload">Neu laden</string>
+    <string name="menu_action_filter">Filtern</string>
+    <string name="action_share">Share</string>
+    <string name="share_text_tag">Lass uns zussammen zu \"%1$s\" gehen</string>
+    <string name="map_activity_user_marker_title">Du!</string>
+
+    <string name="detail_activity_contact_info_tag">Kontact Info:</string>
+    <string name="detail_activity_other_info_tag">Weitere Info:</string>
+    <string name="detail_activity_opening_info_tag">Öffnungszeiten:</string>
+
+    <string name="content_description_open_website">Click um der Verantsalter\'s Website zu öffnen</string>
+    <string name="content_description_send_email">Click um eine Email zu schicken</string>
+    <string name="content_description_neighborhood_cover">Kiez\'s Bild</string>
+
+    <string-array name="sort_order">
+        <item>Alle</item>
+        <item>Charlottenburg-Wilmersdorf</item>
+        <item>Friedrichshain-Kreuzberg</item>
+        <item>Lichtenberg</item>
+        <item>Marzahn-Hellersdorf</item>
+        <item>Mitte</item>
+        <item>Neukölln</item>
+        <item>Pankow</item>
+        <item>Reinickendorf</item>
+        <item>Spandau</item>
+        <item>Steglitz-Zehlendorf</item>
+        <item>Tempelhof-Schöneberg</item>
+        <item>Treptow-Köpenick</item>
+        <item>Brandenburg</item>
+    </string-array>
+</resources>
