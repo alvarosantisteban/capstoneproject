@@ -65,6 +65,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
      * device.
      */
     private boolean mTwoPane;
+    private int columnCount;
     private RecyclerView recyclerView;
     
     // Used to distinguish between real user touches and automatic calls on onItemSelected
@@ -98,7 +99,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-
+        columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
         recyclerView = findViewById(R.id.market_list);
 
         // Throw an async task to ask the content provider for all the markets in the DB
@@ -124,7 +125,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
         // Set the markets in the recycler view
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
-        int columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
         StaggeredGridLayoutManager sglm =
                 new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(sglm);
@@ -286,9 +286,8 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                         activity.markets = getMarketsFromCursor(cursor);
 
                         activity.recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(activity, activity.markets, activity.mTwoPane));
-                        int columnCount = activity.mTwoPane || !activity.getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
                         StaggeredGridLayoutManager sglm =
-                                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
+                                new StaggeredGridLayoutManager(activity.columnCount, StaggeredGridLayoutManager.VERTICAL);
                         activity.recyclerView.setLayoutManager(sglm);
                     } else {
                         // No entries, ask to API
@@ -433,6 +432,13 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             holder.name.setText(mValues.get(position).getName());
             holder.openDays.setText(mValues.get(position).getOpeningDays());
             holder.openHours.setText(mValues.get(position).getOpeningHours());
+            if (mTwoPane) {
+                // If we are in two pane mode, do not display the opening days and hours and give more
+                // space to the market's name
+                holder.name.setMaxLines(4);
+                holder.openDays.setVisibility(View.GONE);
+                holder.openHours.setVisibility(View.GONE);
+            }
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
