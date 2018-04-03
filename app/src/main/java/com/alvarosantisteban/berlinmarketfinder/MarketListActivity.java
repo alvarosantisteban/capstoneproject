@@ -13,8 +13,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -67,6 +67,9 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     private boolean mTwoPane;
     private int columnCount;
     private RecyclerView recyclerView;
+    private GridLayoutManager layoutManager;
+    private static int index = -1;
+    private static int top = -1;
     
     // Used to distinguish between real user touches and automatic calls on onItemSelected
     private boolean hasUserTouchedSpinner = false;
@@ -99,8 +102,10 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
         recyclerView = findViewById(R.id.market_list);
+        layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
+        columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
+        layoutManager.setSpanCount(columnCount);
 
         // Throw an async task to ask the content provider for all the markets in the DB
         new OperateWithDBAsyncTask(this).execute(DB_OPERATIONS.QUERY);
@@ -110,6 +115,26 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Scroll to the last visited position of the recycler view
+        if(index != -1) {
+            layoutManager.scrollToPositionWithOffset(index, top);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // Save the current recycler view's position
+        index = layoutManager.findFirstVisibleItemPosition();
+        View v = recyclerView.getChildAt(0);
+        top = (v == null) ? 0 : (v.getTop() - recyclerView.getPaddingTop());
     }
 
     @Override
@@ -125,9 +150,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
 
         // Set the markets in the recycler view
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
-        StaggeredGridLayoutManager sglm =
-                new StaggeredGridLayoutManager(columnCount, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(sglm);
+        this.layoutManager = new GridLayoutManager(this, columnCount);
         if(mTwoPane && markets.get(0) != null) {
             loadFragmentForMarket(markets.get(0));
         }
@@ -273,7 +296,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             dbOperation = dbOperations[0];
             switch (dbOperation) {
                 case REMOVE_AND_ADD:
-                    // TODO Probably separate these two operations
                     if (marketList != null) {
                         deleteMarkets(activity, marketList);
                         insertMarketsInDB(activity, marketList);
@@ -299,9 +321,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
                         activity.markets = getMarketsFromCursor(cursor);
 
                         activity.recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(activity, activity.markets, activity.mTwoPane));
-                        StaggeredGridLayoutManager sglm =
-                                new StaggeredGridLayoutManager(activity.columnCount, StaggeredGridLayoutManager.VERTICAL);
-                        activity.recyclerView.setLayoutManager(sglm);
                         if(activity.mTwoPane && activity.markets.get(0) != null) {
                             activity.loadFragmentForMarket(activity.markets.get(0));
                         }

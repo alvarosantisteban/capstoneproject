@@ -3,9 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/market_list"
-    android:name="com.alvarosantisteban.berlinmarketfinder.MarketListFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layoutManager="LinearLayoutManager"
+    app:layoutManager="GridLayoutManager"
     tools:context="com.alvarosantisteban.berlinmarketfinder.MarketListActivity"
     tools:listitem="@layout/market_list_content" />
