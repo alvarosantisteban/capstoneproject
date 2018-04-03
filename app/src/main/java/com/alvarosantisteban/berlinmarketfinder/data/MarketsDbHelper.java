@@ -12,7 +12,7 @@ public class MarketsDbHelper extends SQLiteOpenHelper {
     private final static String DATABASE_NAME = "markets.db";
     private final static int DATABASE_VERSION = 1;
 
-    public MarketsDbHelper(Context context) {
+    MarketsDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

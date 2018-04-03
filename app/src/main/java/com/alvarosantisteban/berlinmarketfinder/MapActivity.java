@@ -170,7 +170,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     protected LocationRequest createLocationRequest() {
-        LocationRequest locationRequest = new LocationRequest();
+        LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setInterval(60000);
         locationRequest.setFastestInterval(10000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);

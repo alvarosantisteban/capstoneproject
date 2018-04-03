@@ -22,7 +22,7 @@ public final class MarketsContract {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MARKETS).build();
 
-        public static final String TABLE_NAME = "market";
+        static final String TABLE_NAME = "market";
 
         public static final String COLUMN_NAME_MARKET_ID= "marketId";
         public static final String COLUMN_NAME_NEIGHBORHOOD = "neighborhood";

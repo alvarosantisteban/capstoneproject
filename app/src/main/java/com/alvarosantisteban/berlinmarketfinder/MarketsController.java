@@ -50,7 +50,12 @@ class MarketsController implements Callback<MarketContainer> {
                 Log.e(TAG, "Markets are null");
             }
         } else {
-            Log.e(TAG, response.errorBody().toString());
+            try {
+                //noinspection ConstantConditions
+                Log.e(TAG, response.errorBody().toString());
+            } catch (NullPointerException exception) {
+                Log.e(TAG, "response was not successful and the errorBody could not be converted to a string");
+            }
         }
     }
 
