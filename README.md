@@ -1,0 +1,1 @@
+Please provide a valid API key for the maps to work in the file `google_maps_api.xml`.
