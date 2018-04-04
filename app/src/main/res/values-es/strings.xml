@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Berlin Market Finder</string>
+
     <string name="title_market_list">Mercados</string>
     <string name="title_market_detail">Mercado</string>
 
