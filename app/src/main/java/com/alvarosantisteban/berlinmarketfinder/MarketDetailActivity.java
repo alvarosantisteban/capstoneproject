@@ -1,7 +1,10 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -61,6 +64,8 @@ public class MarketDetailActivity extends AppCompatActivity {
         }
         toolbarSetup(market);
 
+        // Update the widget so it displays the last visited market
+        updateWidget(market);
     }
 
     private void toolbarSetup(Market market) {
@@ -86,6 +91,14 @@ public class MarketDetailActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void updateWidget(@Nullable Market market) {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
+        LastMarketProvider.updateMarketWidgets(this,
+                appWidgetManager,
+                appWidgetManager.getAppWidgetIds(new ComponentName(this, LastMarketProvider.class)),
+                market);
     }
 
     // Method taken from https://stackoverflow.com/a/43077760/1250021

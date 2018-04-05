@@ -19,6 +19,9 @@
     <string name="content_description_send_email">Pulsa para enviar un correo electrónico al organizador</string>
     <string name="content_description_neighborhood_cover">Imagen representativa del barrio</string>
 
+    <string name="add_widget">Añadir widget</string>
+    <string name="widget_default_info">Todavía no hay ninguna información disponible</string>
+
     <string-array name="sort_order">
         <item>Todos</item>
         <item>Charlottenburg-Wilmersdorf</item>

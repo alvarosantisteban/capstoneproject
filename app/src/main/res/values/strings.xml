@@ -18,6 +18,9 @@
     <string name="content_description_send_email">Click to send an email to the organizer</string>
     <string name="content_description_neighborhood_cover">Representative image of the neighborhood</string>
 
+    <string name="add_widget">Add widget</string>
+    <string name="widget_default_info">No market information available</string>
+
     <string-array name="sort_order">
         <item>All</item>
         <item>Charlottenburg-Wilmersdorf</item>

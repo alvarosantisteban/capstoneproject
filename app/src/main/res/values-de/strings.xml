@@ -19,6 +19,9 @@
     <string name="content_description_send_email">Click um eine Email zu schicken</string>
     <string name="content_description_neighborhood_cover">Kiez\'s Bild</string>
 
+    <string name="add_widget">Widget hinzufügen</string>
+    <string name="widget_default_info">Keine Market Information verfügbar</string>
+
     <string-array name="sort_order">
         <item>Alle</item>
         <item>Charlottenburg-Wilmersdorf</item>

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.alvarosantisteban.berlinmarketfinder">
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -40,11 +39,21 @@
             android:authorities="com.alvarosantisteban.berlinmarketfinder"
             android:exported="false" />
 
-        <activity android:name=".MapActivity"></activity>
+        <activity android:name=".MapActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key"/>
+            android:value="@string/google_maps_key" />
+
+        <receiver android:name=".LastMarketProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/last_market_provider_info" />
+        </receiver>
     </application>
 
 </manifest>
