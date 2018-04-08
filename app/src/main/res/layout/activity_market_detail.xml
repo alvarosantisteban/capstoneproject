@@ -28,7 +28,8 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@drawable/neighborhoods_06_neukoelln"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="parallax"
+                android:contentDescription="@string/content_description_neighborhood_cover"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
