@@ -62,7 +62,7 @@
         app:layout_constraintEnd_toStartOf="@+id/markets_list_hours"
         app:layout_constraintStart_toStartOf="@+id/markets_list_name"
         app:layout_constraintTop_toBottomOf="@+id/markets_list_name"
-        style="@style/rvItemOpeninInfo"
+        style="@style/rvItemOpeningInfo"
         tools:text="Mo - Fr Sa	" />
 
     <TextView
@@ -75,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/markets_list_days"
         app:layout_constraintTop_toBottomOf="@+id/markets_list_name"
-        style="@style/rvItemOpeninInfo"
+        style="@style/rvItemOpeningInfo"
         android:gravity="end"
         tools:text="07:00 - 16:00 07:00 - 13:00" />
 

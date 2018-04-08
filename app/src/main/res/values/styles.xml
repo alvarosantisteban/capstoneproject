@@ -32,10 +32,17 @@
         <item name="android:textIsSelectable">true</item>
     </style>
 
-    <style name="rvItemOpeninInfo">
+    <style name="rvItemOpeningInfo">
         <item name="android:ellipsize">end</item>
         <item name="android:maxLines">2</item>
         <item name="android:textAppearance">?attr/textAppearanceListItem</item>
         <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
+
+    <style name="widgetOpeningInfo">
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/widget_opening_text</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:paddingTop">@dimen/widget_margin</item>
     </style>
 </resources>

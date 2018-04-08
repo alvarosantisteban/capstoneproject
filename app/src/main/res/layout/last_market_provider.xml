@@ -1,11 +1,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/widget_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorWhite"
     android:padding="@dimen/widget_margin">
 
     <TextView
@@ -16,14 +16,14 @@
         android:layout_marginRight="@dimen/standard_margin"
         android:layout_marginStart="@dimen/standard_margin"
         android:layout_marginLeft="@dimen/standard_margin"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/widget_margin"
         android:ellipsize="end"
         android:includeFontPadding="false"
         android:maxLines="2"
-        android:textAppearance="?attr/textAppearanceListItem"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/widget_name_text"
+        android:gravity="center"
+        android:textStyle="bold"
         tools:text="Flohmarket Neukoller"/>
 
     <LinearLayout
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:layout_marginStart="@dimen/standard_margin"
             android:layout_marginLeft="@dimen/standard_margin"
-            style="@style/rvItemOpeninInfo"
+            style="@style/widgetOpeningInfo"
             tools:text="Mo - Fr Sa	" />
 
         <TextView
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="@dimen/standard_margin"
             android:layout_marginRight="@dimen/standard_margin"
-            style="@style/rvItemOpeninInfo"
+            style="@style/widgetOpeningInfo"
             android:gravity="end"
             tools:text="07:00 - 16:00 07:00 - 13:00" />
     </LinearLayout>
