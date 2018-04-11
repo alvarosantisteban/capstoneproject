@@ -61,5 +61,6 @@
         android:stateListAnimator="@animator/fab_state_list_anim"
         app:pressedTranslationZ="@dimen/fab_press_translation_z"
         app:layout_anchor="@id/collapsing_toolbar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|end"
+        android:contentDescription="@string/content_description_share_fab"/>
 </android.support.design.widget.CoordinatorLayout>

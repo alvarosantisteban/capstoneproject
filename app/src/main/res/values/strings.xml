@@ -17,6 +17,8 @@
     <string name="content_description_open_website">Click to open the organizer\'s website</string>
     <string name="content_description_send_email">Click to send an email to the organizer</string>
     <string name="content_description_neighborhood_cover">Representative image of the neighborhood</string>
+    <string name="content_description_share_fab">Click to share this market</string>
+    <string name="content_description_go_to_map_fab">Click to see markets in a map</string>
 
     <string name="add_widget">Add widget</string>
     <string name="widget_default_info">No market information available</string>

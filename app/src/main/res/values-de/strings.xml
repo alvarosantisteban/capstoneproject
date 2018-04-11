@@ -18,6 +18,8 @@
     <string name="content_description_open_website">Click um der Verantsalter\'s Website zu öffnen</string>
     <string name="content_description_send_email">Click um eine Email zu schicken</string>
     <string name="content_description_neighborhood_cover">Kiez\'s Bild</string>
+    <string name="content_description_share_fab">Click um das Markt zu sharen</string>
+    <string name="content_description_go_to_map_fab">Click um die Markts auf einer Karte zu sehen</string>
 
     <string name="add_widget">Widget hinzufügen</string>
     <string name="widget_default_info">Keine Market Information verfügbar</string>
