@@ -1,7 +1,5 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -12,12 +10,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -25,9 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.alvarosantisteban.berlinmarketfinder.data.MarketsContract;
 import com.alvarosantisteban.berlinmarketfinder.model.Market;
@@ -49,7 +46,10 @@ import java.util.List;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
-public class MarketListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MarketListActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,
+        android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
+
+    private static final String TAG = MarketListActivity.class.getSimpleName();
 
     public static final int POS_ALL = 0;
     public static final String FILTER_ALL_NEIGHBORHOODS = "";
@@ -65,9 +65,9 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
      * device.
      */
     private boolean mTwoPane;
-    private int columnCount;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
+    private SimpleItemRecyclerViewAdapter adapter;
     private static int index = -1;
     private static int top = -1;
     
@@ -104,11 +104,13 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         }
         recyclerView = findViewById(R.id.market_list);
         layoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
-        columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
+        int columnCount = mTwoPane || !getResources().getBoolean(R.bool.isTablet) ? 1 : 2;
         layoutManager.setSpanCount(columnCount);
 
-        // Throw an async task to ask the content provider for all the markets in the DB
-        new OperateWithDBAsyncTask(this).execute(DB_OPERATIONS.QUERY);
+        adapter = new SimpleItemRecyclerViewAdapter(this, null, mTwoPane, null);
+        recyclerView.setAdapter(adapter);
+
+        getSupportLoaderManager().initLoader(1, null, this);
     }
 
     @Override
@@ -148,9 +150,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     public void onMarketsDownloaded(List<Market> markets) {
         this.markets = markets;
 
-        // Set the markets in the recycler view
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, markets, mTwoPane));
-        this.layoutManager = new GridLayoutManager(this, columnCount);
         if(mTwoPane && markets.get(0) != null) {
             loadFragmentForMarket(markets.get(0));
         }
@@ -192,6 +191,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_reload:
+                Log.d(TAG, "Download the markets from API");
                 // Ask API for markets
                 MarketsController marketsController = new MarketsController();
                 marketsController.start(getCurrentFilter());
@@ -213,7 +213,8 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         editor.putInt(SPINNER_POS, position);
         editor.apply();
 
-        new OperateWithDBAsyncTask(this).execute(DB_OPERATIONS.QUERY);
+        // Restart the loader to do the query for the right neighborhood
+        getSupportLoaderManager().restartLoader(1, null, this);
     }
 
     @NonNull
@@ -252,7 +253,7 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         }
     }
 
-    private void loadFragmentForMarket(@NonNull Market market) {
+    void loadFragmentForMarket(@NonNull Market market) {
         Bundle arguments = new Bundle();
         arguments.putParcelable(MarketDetailFragment.ARG_ITEM, market);
         MarketDetailFragment fragment = new MarketDetailFragment();
@@ -277,11 +278,6 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
         @NonNull
         private WeakReference<MarketListActivity> activityReference;
 
-        OperateWithDBAsyncTask(@NonNull MarketListActivity context) {
-            this.marketList = null;
-            activityReference = new WeakReference<>(context);
-        }
-
         OperateWithDBAsyncTask(@NonNull MarketListActivity context, @Nullable List<Market> marketList) {
             this.marketList = marketList;
             activityReference = new WeakReference<>(context);
@@ -297,203 +293,69 @@ public class MarketListActivity extends AppCompatActivity implements AdapterView
             switch (dbOperation) {
                 case REMOVE_AND_ADD:
                     if (marketList != null) {
-                        deleteMarkets(activity, marketList);
-                        insertMarketsInDB(activity, marketList);
+                        Util.deleteMarkets(activity, marketList);
+                        Util.insertMarketsInDB(activity, marketList);
                     }
                     return null;
-                case QUERY:
-                    return queryMarkets(activity, activity.getCurrentFilter());
-
             }
             return null;
-        }
-
-        @Override
-        protected void onPostExecute(@Nullable Cursor cursor) {
-            super.onPostExecute(cursor);
-
-            MarketListActivity activity = activityReference.get();
-            if (activity == null || activity.isFinishing()) return;
-
-            switch (dbOperation) {
-                case QUERY:
-                    if(cursor != null && cursor.getCount() > 0) {
-                        activity.markets = getMarketsFromCursor(cursor);
-
-                        activity.recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(activity, activity.markets, activity.mTwoPane));
-                        if(activity.mTwoPane && activity.markets.get(0) != null) {
-                            activity.loadFragmentForMarket(activity.markets.get(0));
-                        }
-                    } else {
-                        // No entries, ask to API
-                        MarketsController marketsController = new MarketsController();
-                        marketsController.start(activity.getCurrentFilter());
-                    }
-                case REMOVE_AND_ADD:
-
-            }
-        }
-
-        /**
-         * Creates a list of Markets from a Cursor.
-         */
-        @NonNull
-        private List<Market> getMarketsFromCursor(Cursor cursor) {
-            List<Market> markets = new ArrayList<>();
-            try {
-                while (cursor.moveToNext()) {
-                    Market market = new Market(cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_MARKET_ID)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_NAME)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_LATITUDE)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_LONGITUDE)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OPENING_DAYS)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OPENING_HOURS)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_NAME)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_EMAIL)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_WEBSITE)),
-                            cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OTHER_INFO)));
-                    markets.add(market);
-                }
-            } finally {
-                cursor.close();
-            }
-            return markets;
-        }
-
-        private void insertMarketsInDB(@NonNull MarketListActivity activity, @NonNull List<Market> markets) {
-            ContentValues[] contentValues = new ContentValues[markets.size()];
-            Market market;
-            for (int i = 0; i < markets.size(); i++) {
-                market = markets.get(i);
-                ContentValues values = new ContentValues();
-                values.put(MarketsContract.Market.COLUMN_NAME_MARKET_ID, market.getId());
-                values.put(MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD, market.getNeighborhood());
-                values.put(MarketsContract.Market.COLUMN_NAME_NAME, market.getName());
-                values.put(MarketsContract.Market.COLUMN_NAME_LATITUDE, market.getLatitudeString());
-                values.put(MarketsContract.Market.COLUMN_NAME_LONGITUDE, market.getLongitudeString());
-                values.put(MarketsContract.Market.COLUMN_NAME_OPENING_DAYS, market.getOpeningDays());
-                values.put(MarketsContract.Market.COLUMN_NAME_OPENING_HOURS, market.getOpeningHours());
-                values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_NAME, market.getOrganizerNameAndPhone());
-                values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_EMAIL, market.getOrganizerEmail());
-                values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_WEBSITE, market.getOrganizerWebsite());
-                values.put(MarketsContract.Market.COLUMN_NAME_OTHER_INFO, market.getOtherInfo());
-                contentValues[i] = values;
-            }
-
-            activity.getContentResolver().bulkInsert(MarketsContract.Market.CONTENT_URI, contentValues);
-        }
-
-        private void deleteMarkets(@NonNull MarketListActivity activity, @NonNull List<Market> markets) {
-            for (Market market : markets) {
-                activity.getContentResolver().delete(MarketsContract.Market.CONTENT_URI.buildUpon().appendPath(market.getId()).build(),
-                        null,
-                        null);
-            }
-        }
-
-        private Cursor queryMarkets(@NonNull MarketListActivity activity, @Nullable String neighborhood) {
-            String selection;
-            String[] selectionArgs = {neighborhood};
-            if (neighborhood != null && neighborhood.contains(activity.getResources().getStringArray(R.array.sort_order)[13])) {
-                // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
-                selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + " LIKE 'Brandenburg%'";
-                selectionArgs = null;
-            } else {
-                selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + "=?";
-            }
-
-            return activity.getContentResolver().query(MarketsContract.Market.CONTENT_URI,
-                    null,
-                    selection,
-                    selectionArgs,
-                    null,
-                    null);
         }
     }
 
     ////////////////////////////////////////////////////////////////////////////////
-    // ADAPTER FOR RECYCLER VIEW
+    // LOADER CALLBACKS
     ////////////////////////////////////////////////////////////////////////////////
 
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+    @NonNull
+    @Override
+    public android.support.v4.content.Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG, "onCreateLoader");
 
-        private final MarketListActivity mParentActivity;
-        private final List<Market> mValues;
-        private final boolean mTwoPane;
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Market market = (Market) view.getTag();
-                if (mTwoPane) {
-                    mParentActivity.loadFragmentForMarket(market);
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, MarketDetailActivity.class);
-                    intent.putExtra(MarketDetailFragment.ARG_ITEM, market);
-
-                    context.startActivity(intent);
-                }
-            }
-        };
-
-        SimpleItemRecyclerViewAdapter(MarketListActivity parent,
-                                      List<Market> items,
-                                      boolean twoPane) {
-            mValues = items;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
+        String neighborhood = getCurrentFilter();
+        String selection;
+        String[] selectionArgs = {neighborhood};
+        if (neighborhood.contains(getResources().getStringArray(R.array.sort_order)[13])) {
+            // The string for Brandenburg usually contains the name of the city too: Brandenburg (Potsdam)
+            selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + " LIKE 'Brandenburg%'";
+            selectionArgs = null;
+        } else if (neighborhood.equals("")) {
+            selection = null;
+            selectionArgs = null;
+        } else {
+            selection = MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD + "=?";
         }
 
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.market_list_content, parent, false);
-            return new ViewHolder(view);
-        }
+        return new CursorLoader(this, MarketsContract.Market.CONTENT_URI,
+                null,
+                selection,
+                selectionArgs,
+                null);
+    }
 
-        @Override
-        public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-            holder.neighborHoodImage.setImageResource(Util.getCoverImage(mValues.get(position).getNeighborhood(), mParentActivity));
+    @Override
+    public void onLoadFinished(@NonNull android.support.v4.content.Loader<Cursor> loader, Cursor cursor) {
 
-            holder.neighborhood.setText(mValues.get(position).getNeighborhood());
-            holder.name.setText(mValues.get(position).getName());
-            holder.openDays.setText(mValues.get(position).getOpeningDays());
-            holder.openHours.setText(mValues.get(position).getOpeningHours());
-            if (mTwoPane) {
-                // If we are in two pane mode, do not display the opening days and hours and give more
-                // space to the market's name
-                holder.name.setMaxLines(4);
-                holder.openDays.setVisibility(View.GONE);
-                holder.openHours.setVisibility(View.GONE);
+        if(cursor != null && cursor.getCount() > 0) {
+            Log.d(TAG, "Retrieve the markets from DB");
+
+            markets = Util.getMarketsFromCursor(cursor);
+            // Display the first market in two pane mode
+            if(mTwoPane && markets.get(0) != null) {
+                loadFragmentForMarket(markets.get(0));
             }
 
-            holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+            adapter.swapCursor(cursor);
+        } else {
+            Log.d(TAG, "Download the markets from API");
+            // No entries, ask to API
+            MarketsController marketsController = new MarketsController();
+            marketsController.start(getCurrentFilter());
         }
+    }
 
-        @Override
-        public int getItemCount() {
-            return mValues.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            final ImageView neighborHoodImage;
-            final TextView neighborhood;
-            final TextView name;
-            final TextView openDays;
-            final TextView openHours;
-
-            ViewHolder(View view) {
-                super(view);
-                neighborHoodImage = view.findViewById(R.id.market_cover);
-                neighborhood = view.findViewById(R.id.markets_list_neighborhood);
-                name = view.findViewById(R.id.markets_list_name);
-                openDays = view.findViewById(R.id.markets_list_days);
-                openHours = view.findViewById(R.id.markets_list_hours);
-            }
-        }
+    @Override
+    public void onLoaderReset(@NonNull android.support.v4.content.Loader<Cursor> loader) {
+        adapter.swapCursor(null);
+        Log.d(TAG, "onLoaderReset");
     }
 }

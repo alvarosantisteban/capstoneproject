@@ -1,9 +1,11 @@
 package com.alvarosantisteban.berlinmarketfinder.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
+import com.alvarosantisteban.berlinmarketfinder.data.MarketsContract;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -73,6 +75,20 @@ public class Market implements Parcelable{
         this.organizerEmail = organizerEmail;
         this.organizerWebsite = ensureWebsiteFormat(organizerWebsite);
         this.otherInfo = otherInfo;
+    }
+
+    public static Market from(Cursor cursor) {
+        return new Market(cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_MARKET_ID)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_NAME)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_LATITUDE)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_LONGITUDE)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OPENING_DAYS)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OPENING_HOURS)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_NAME)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_EMAIL)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_ORGANIZER_WEBSITE)),
+                cursor.getString(cursor.getColumnIndex(MarketsContract.Market.COLUMN_NAME_OTHER_INFO)));
     }
 
     protected Market(Parcel in) {

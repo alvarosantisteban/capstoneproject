@@ -1,7 +1,15 @@
 package com.alvarosantisteban.berlinmarketfinder;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.support.annotation.NonNull;
+
+import com.alvarosantisteban.berlinmarketfinder.data.MarketsContract;
+import com.alvarosantisteban.berlinmarketfinder.model.Market;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Small class for methods used all around the app.
@@ -43,4 +51,53 @@ final class Util {
         }
         return neighborhoodImageId;
     }
+
+    static void insertMarketsInDB(@NonNull MarketListActivity activity, @NonNull List<Market> markets) {
+        ContentValues[] contentValues = new ContentValues[markets.size()];
+        Market market;
+        for (int i = 0; i < markets.size(); i++) {
+            market = markets.get(i);
+            ContentValues values = new ContentValues();
+            values.put(MarketsContract.Market.COLUMN_NAME_MARKET_ID, market.getId());
+            values.put(MarketsContract.Market.COLUMN_NAME_NEIGHBORHOOD, market.getNeighborhood());
+            values.put(MarketsContract.Market.COLUMN_NAME_NAME, market.getName());
+            values.put(MarketsContract.Market.COLUMN_NAME_LATITUDE, market.getLatitudeString());
+            values.put(MarketsContract.Market.COLUMN_NAME_LONGITUDE, market.getLongitudeString());
+            values.put(MarketsContract.Market.COLUMN_NAME_OPENING_DAYS, market.getOpeningDays());
+            values.put(MarketsContract.Market.COLUMN_NAME_OPENING_HOURS, market.getOpeningHours());
+            values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_NAME, market.getOrganizerNameAndPhone());
+            values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_EMAIL, market.getOrganizerEmail());
+            values.put(MarketsContract.Market.COLUMN_NAME_ORGANIZER_WEBSITE, market.getOrganizerWebsite());
+            values.put(MarketsContract.Market.COLUMN_NAME_OTHER_INFO, market.getOtherInfo());
+            contentValues[i] = values;
+        }
+
+        activity.getContentResolver().bulkInsert(MarketsContract.Market.CONTENT_URI, contentValues);
+    }
+
+    static void deleteMarkets(@NonNull MarketListActivity activity, @NonNull List<Market> markets) {
+        for (Market market : markets) {
+            activity.getContentResolver().delete(MarketsContract.Market.CONTENT_URI.buildUpon().appendPath(market.getId()).build(),
+                    null,
+                    null);
+        }
+    }
+
+    /**
+     * Creates a list of Markets from a Cursor.
+     */
+    @NonNull
+    static List<Market> getMarketsFromCursor(Cursor cursor) {
+        List<Market> markets = new ArrayList<>();
+        try {
+            while (cursor.moveToNext()) {
+                markets.add(Market.from(cursor));
+            }
+        } finally {
+            // Put the cursor back in the first position
+            cursor.moveToFirst();
+        }
+        return markets;
+    }
+
 }
